@@ -10,8 +10,8 @@ license=('MIT')
 depends=('gtk4' 'gtk4-layer-shell')
 makedepends=('cargo' 'pkgconf')
 install=diacritter.install
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('51769b7ad4f227d527a2477511ea6fb8301b2dfa8f95903bdb7449844357f7b0')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"

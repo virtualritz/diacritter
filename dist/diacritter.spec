@@ -3,7 +3,7 @@
 #
 # Generate sources with the following:
 # export TAG=0.1.0
-# git clone --depth=1 --branch=v${TAG} https://github.com/virtualritz/diacritter diacritter-${TAG}/
+# git clone --depth=1 --branch=${TAG} https://github.com/virtualritz/diacritter diacritter-${TAG}/
 # cd diacritter-${TAG}/ && cargo vendor && cd -
 # tar --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner --pax-option='delete=atime,delete=ctime' -cvf diacritter-${TAG}.tar.gz diacritter-${TAG}/
 
@@ -19,7 +19,7 @@ Summary:        Press-and-hold diacritic popup for Linux (macOS-style)
 License:        MIT
 URL:            https://github.com/virtualritz/diacritter
 
-Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
 Requires:       gtk4
 Requires:       gtk4-layer-shell
