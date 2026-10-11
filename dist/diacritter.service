@@ -1,13 +1,13 @@
 [Unit]
-Description=Accent character daemon (press-and-hold popup)
+Description=Press-and-hold diacritic daemon
 After=default.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/accentd
+ExecStart=/usr/bin/diacritterd
 Restart=on-failure
 RestartSec=3
-RuntimeDirectory=accentd
+RuntimeDirectory=diacritter
 # The daemon runs in the user session and only needs /dev/input and /dev/uinput.
 # Namespace-based hardening (ProtectHome, ProtectSystem, PrivateTmp) is omitted
 # because Ubuntu restricts unprivileged user namespaces by default.

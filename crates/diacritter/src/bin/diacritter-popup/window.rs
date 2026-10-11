@@ -7,7 +7,7 @@ use crate::layer_shell;
 pub fn build_popup(app: &gtk4::Application, font_size: u32) -> (gtk4::Window, gtk4::Label) {
     let window = gtk4::Window::builder()
         .application(app)
-        .title("accentd")
+        .title("diacritter")
         .decorated(false)
         .resizable(false)
         .default_width(1)

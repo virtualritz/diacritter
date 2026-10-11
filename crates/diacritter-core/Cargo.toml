@@ -1,9 +1,14 @@
 [package]
-name = "accentd-core"
+name = "diacritter-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
+repository.workspace = true
+readme.workspace = true
+description = "Core types, IPC, and diacritic tables for diacritter."
+keywords = ["diacritics", "unicode", "evdev", "keyboard"]
+categories = ["os::linux-apis"]
 
 [dependencies]
 serde = { workspace = true }

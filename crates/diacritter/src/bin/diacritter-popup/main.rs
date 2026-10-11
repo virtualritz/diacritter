@@ -2,8 +2,8 @@ mod ipc_client;
 mod layer_shell;
 mod window;
 
-use accentd_core::config::Config;
-use accentd_core::ipc::DaemonMsg;
+use diacritter_core::config::Config;
+use diacritter_core::ipc::DaemonMsg;
 use gtk4::glib;
 use gtk4::prelude::*;
 use std::cell::RefCell;
@@ -22,11 +22,11 @@ fn main() {
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive("accentd_popup=info".parse().unwrap()),
+                .add_directive("diacritter_popup=info".parse().unwrap()),
         )
         .init();
 
-    info!("accentd-popup starting");
+    info!("diacritter-popup starting");
 
     let config = match Config::load() {
         Ok(config) => config,
@@ -46,7 +46,7 @@ fn main() {
 
         let initial = match ipc_client::connect() {
             Ok((rx, stream)) => {
-                info!("connected to accentd daemon");
+                info!("connected to diacritter daemon");
                 Some(IpcState {
                     rx,
                     _stream: stream,
@@ -98,7 +98,7 @@ fn main() {
                 if last.elapsed() >= Duration::from_secs(1) {
                     *last = Instant::now();
                     if let Ok((rx, stream)) = ipc_client::try_connect() {
-                        info!("reconnected to accentd daemon");
+                        info!("reconnected to diacritter daemon");
                         *state = Some(IpcState {
                             rx,
                             _stream: stream,

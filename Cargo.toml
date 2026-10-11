@@ -1,20 +1,20 @@
 [workspace]
 members = [
-    "crates/accentd-core",
-    "crates/accentd",
-    "crates/accentd-popup",
-    "crates/accentctl",
+    "crates/diacritter-core",
+    "crates/diacritter",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.1"
+version = "0.1.0"
 edition = "2021"
 license = "MIT"
-authors = ["Gildo"]
+authors = ["Ermenegildo Fiorito", "Moritz Moeller"]
+repository = "https://github.com/virtualritz/diacritter"
+readme = "README.md"
 
 [workspace.dependencies]
-accentd-core = { path = "crates/accentd-core" }
+diacritter-core = { path = "crates/diacritter-core", version = "0.1.0" }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

@@ -100,7 +100,7 @@ impl Config {
     pub fn config_dir() -> PathBuf {
         dirs::config_dir()
             .unwrap_or_else(|| PathBuf::from("/etc"))
-            .join("accentd")
+            .join("diacritter")
     }
 
     pub fn config_path() -> PathBuf {
@@ -137,7 +137,7 @@ impl Config {
         // Runtime locale files
         for dir in &[
             Self::config_dir().join("locales"),
-            PathBuf::from("/usr/share/accentd/locales"),
+            PathBuf::from("/usr/share/diacritter/locales"),
         ] {
             let path = dir.join(format!("{}.toml", self.locale.active));
             if path.exists() {
@@ -159,17 +159,17 @@ impl Config {
 
 /// Return the path to the daemon's Unix socket.
 ///
-/// `ACCENTD_SOCK` overrides the path for testing. The default lives in the
-/// per-user runtime directory because `accentd` runs as a user service. A
+/// `DIACRITTER_SOCK` overrides the path for testing. The default lives in the
+/// per-user runtime directory because `diacritter` runs as a user service. A
 /// system-wide path is used only when no runtime directory is available.
 pub fn socket_path() -> PathBuf {
-    if let Ok(path) = env::var("ACCENTD_SOCK") {
+    if let Ok(path) = env::var("DIACRITTER_SOCK") {
         return PathBuf::from(path);
     }
     if let Some(runtime) = dirs::runtime_dir() {
-        return runtime.join("accentd").join("accentd.sock");
+        return runtime.join("diacritter").join("diacritter.sock");
     }
-    PathBuf::from("/run/accentd/accentd.sock")
+    PathBuf::from("/run/diacritter/diacritter.sock")
 }
 
 /// Return true when `name` is a safe locale identifier.
@@ -320,8 +320,8 @@ active = "fr"
     // --- spec: socket path ---
 
     #[test]
-    fn socket_path_ends_with_accentd_sock() {
+    fn socket_path_ends_with_diacritter_sock() {
         let path = socket_path();
-        assert_eq!(path.file_name().unwrap(), "accentd.sock");
+        assert_eq!(path.file_name().unwrap(), "diacritter.sock");
     }
 }

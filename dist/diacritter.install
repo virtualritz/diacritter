@@ -3,16 +3,16 @@ post_install() {
     udevadm control --reload-rules 2>/dev/null || true
 
     echo ""
-    echo ":: To enable accentd (runs as your user, not root):"
-    echo "   systemctl --user enable --now accentd"
-    echo "   systemctl --user enable --now accentd-popup"
+    echo ":: To enable diacritter (runs as your user, not root):"
+    echo "   systemctl --user enable --now diacritter"
+    echo "   systemctl --user enable --now diacritter-popup"
     echo ""
     echo ":: Your user must be in the 'input' group:"
     echo "   sudo usermod -aG input \$USER"
     echo "   (log out and back in)"
     echo ""
     echo ":: Set your locale:"
-    echo "   accentctl set-locale it   # it, es, fr, de, pt"
+    echo "   diacritter set-locale it   # it, es, fr, de, pt"
 }
 
 post_upgrade() {
@@ -21,10 +21,10 @@ post_upgrade() {
 
     echo ""
     echo ":: Restart the user services:"
-    echo "   systemctl --user restart accentd accentd-popup"
+    echo "   systemctl --user restart diacritter diacritter-popup"
 }
 
 pre_remove() {
     echo ":: Disable the user services:"
-    echo "   systemctl --user disable --now accentd accentd-popup"
+    echo "   systemctl --user disable --now diacritter diacritter-popup"
 }

@@ -1,12 +1,12 @@
-use accentd_core::config;
-use accentd_core::ipc::{self, ClientMsg, DaemonMsg};
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
+use diacritter_core::config;
+use diacritter_core::ipc::{self, ClientMsg, DaemonMsg};
 use std::io::{BufRead, BufReader, Write};
 use std::os::unix::net::UnixStream;
 
 #[derive(Parser)]
-#[command(name = "accentctl", about = "Control the accentd daemon")]
+#[command(name = "diacritter", about = "Control the diacritter daemon")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -35,7 +35,7 @@ fn main() -> Result<()> {
     let socket_path = config::socket_path();
     let stream = UnixStream::connect(&socket_path).with_context(|| {
         format!(
-            "connecting to accentd at {}\nIs the daemon running?",
+            "connecting to diacritter at {}\nIs the daemon running?",
             socket_path.display()
         )
     })?;
@@ -66,7 +66,7 @@ fn main() -> Result<()> {
                     locale,
                     version,
                 } => {
-                    println!("accentd v{}", version);
+                    println!("diacritter v{}", version);
                     println!("  enabled: {}", enabled);
                     println!("  locale:  {}", locale);
                 }

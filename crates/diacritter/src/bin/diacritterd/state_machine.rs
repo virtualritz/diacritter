@@ -1,6 +1,6 @@
-use accentd_core::charmap;
-use accentd_core::config::Config;
-use accentd_core::ipc::DaemonMsg;
+use diacritter_core::charmap;
+use diacritter_core::config::Config;
+use diacritter_core::ipc::DaemonMsg;
 use evdev::{EventType, InputEvent, KeyCode};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -405,7 +405,7 @@ impl StateMachine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use accentd_core::charmap::builtin_locale;
+    use diacritter_core::charmap::builtin_locale;
 
     // Helpers to create events without caring about implementation details.
     // evdev keycodes from Linux input-event-codes.h:

@@ -12,7 +12,7 @@ pub fn create_virtual_device() -> Result<VirtualDevice> {
 
     let vdev = VirtualDevice::builder()
         .context("creating VirtualDeviceBuilder")?
-        .name("accentd virtual keyboard")
+        .name("diacritter virtual keyboard")
         .with_keys(&keys)
         .context("setting keys")?
         .build()

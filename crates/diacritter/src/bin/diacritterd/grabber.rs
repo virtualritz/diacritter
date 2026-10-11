@@ -29,7 +29,7 @@ pub fn find_keyboards() -> Result<Vec<PathBuf>> {
         match Device::open(&path) {
             Ok(dev) => {
                 // Skip our own virtual device to avoid feedback loop
-                if dev.name().is_some_and(|n| n.contains("accentd")) {
+                if dev.name().is_some_and(|n| n.contains("diacritter")) {
                     debug!(path = %path.display(), name = ?dev.name(), "skipping own virtual device");
                     continue;
                 }

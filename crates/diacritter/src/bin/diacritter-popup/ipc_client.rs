@@ -1,6 +1,6 @@
-use accentd_core::config;
-use accentd_core::ipc::{self, ClientMsg, DaemonMsg};
 use anyhow::{Context, Result};
+use diacritter_core::config;
+use diacritter_core::ipc::{self, ClientMsg, DaemonMsg};
 use std::io::{BufRead, BufReader, Write};
 use std::os::unix::net::UnixStream;
 use std::sync::mpsc as std_mpsc;

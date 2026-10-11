@@ -3,9 +3,9 @@ mod grabber;
 mod state_machine;
 mod uinput_emitter;
 
-use accentd_core::config::{self, Config};
-use accentd_core::ipc::{self, ClientMsg, DaemonMsg};
 use anyhow::{Context, Result};
+use diacritter_core::config::{self, Config};
+use diacritter_core::ipc::{self, ClientMsg, DaemonMsg};
 use evdev::uinput::VirtualDevice;
 use state_machine::{Action, StateMachine};
 use std::fs;
@@ -32,11 +32,11 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::from_default_env()
-                .add_directive("accentd=info".parse().unwrap()),
+                .add_directive("diacritter=info".parse().unwrap()),
         )
         .init();
 
-    info!("accentd starting");
+    info!("diacritter starting");
 
     let config = Config::load().context("loading config")?;
     // With `macos-order`, default to the macOS U.S. table when the user has no
@@ -101,7 +101,7 @@ async fn main() -> Result<()> {
     let listener = UnixListener::bind(&socket_path)
         .with_context(|| format!("binding socket {}", socket_path.display()))?;
     // The socket lives in the user's runtime directory. Owner-only access is
-    // enough because the popup and `accentctl` run as the same user.
+    // enough because the popup and `diacritter` run as the same user.
     if let Err(e) = fs::set_permissions(&socket_path, fs::Permissions::from_mode(0o600)) {
         warn!(error = %e, "failed to restrict socket permissions");
     }
@@ -206,7 +206,7 @@ async fn main() -> Result<()> {
         }
     }
 
-    info!("accentd shutting down");
+    info!("diacritter shutting down");
     let _ = fs::remove_file(&socket_path);
     Ok(())
 }

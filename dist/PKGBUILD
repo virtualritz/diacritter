@@ -1,16 +1,17 @@
-# Maintainer: Ermenegildo Fiorito <gildo.fiorito@gmail.com>
-pkgname=accentd
-pkgver=0.2.1
+# Maintainer: Moritz Moeller <virtualritz@protonmail.com>
+# Original author: Ermenegildo Fiorito <gildo.fiorito@gmail.com>
+pkgname=diacritter
+pkgver=0.1.0
 pkgrel=1
-pkgdesc="Press-and-hold accent character popup for Linux (macOS-style)"
+pkgdesc="Press-and-hold diacritic popup for Linux (macOS-style)"
 arch=('x86_64')
-url="https://github.com/gildo/accentd"
+url="https://github.com/virtualritz/diacritter"
 license=('MIT')
 depends=('gtk4' 'gtk4-layer-shell')
 makedepends=('cargo' 'pkgconf')
-install=accentd.install
+install=diacritter.install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('c653f08e0df686b701f8e8fac67cfb0a9a671e76bc93277a86e939d9bfad1412')
+sha256sums=('SKIP')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -35,17 +36,17 @@ check() {
 package() {
     cd "$srcdir/$pkgname-$pkgver"
 
-    install -Dm0755 target/release/accentd "$pkgdir/usr/bin/accentd"
-    install -Dm0755 target/release/accentd-popup "$pkgdir/usr/bin/accentd-popup"
-    install -Dm0755 target/release/accentctl "$pkgdir/usr/bin/accentctl"
+    install -Dm0755 target/release/diacritter "$pkgdir/usr/bin/diacritter"
+    install -Dm0755 target/release/diacritterd "$pkgdir/usr/bin/diacritterd"
+    install -Dm0755 target/release/diacritter-popup "$pkgdir/usr/bin/diacritter-popup"
 
-    install -Dm644 dist/accentd.service "$pkgdir/usr/lib/systemd/user/accentd.service"
-    install -Dm644 dist/accentd-popup.service "$pkgdir/usr/lib/systemd/user/accentd-popup.service"
-    install -Dm644 dist/70-accentd.rules "$pkgdir/usr/lib/udev/rules.d/70-accentd.rules"
+    install -Dm644 dist/diacritter.service "$pkgdir/usr/lib/systemd/user/diacritter.service"
+    install -Dm644 dist/diacritter-popup.service "$pkgdir/usr/lib/systemd/user/diacritter-popup.service"
+    install -Dm644 dist/70-diacritter.rules "$pkgdir/usr/lib/udev/rules.d/70-diacritter.rules"
 
-    install -dm755 "$pkgdir/usr/share/accentd/locales"
-    install -Dm644 data/locales/*.toml "$pkgdir/usr/share/accentd/locales/"
-    install -Dm644 data/config.default.toml "$pkgdir/usr/share/accentd/config.default.toml"
+    install -dm755 "$pkgdir/usr/share/diacritter/locales"
+    install -Dm644 data/locales/*.toml "$pkgdir/usr/share/diacritter/locales/"
+    install -Dm644 data/config.default.toml "$pkgdir/usr/share/diacritter/config.default.toml"
 
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

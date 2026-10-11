@@ -3,51 +3,6 @@
 version = 4
 
 [[package]]
-name = "accentctl"
-version = "0.2.1"
-dependencies = [
- "accentd-core",
- "anyhow",
- "clap",
-]
-
-[[package]]
-name = "accentd"
-version = "0.2.1"
-dependencies = [
- "accentd-core",
- "anyhow",
- "evdev",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "accentd-core"
-version = "0.2.1"
-dependencies = [
- "anyhow",
- "dirs",
- "serde",
- "serde_json",
- "toml",
- "unicode-normalization",
-]
-
-[[package]]
-name = "accentd-popup"
-version = "0.2.1"
-dependencies = [
- "accentd-core",
- "anyhow",
- "gtk4",
- "gtk4-layer-shell",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "aho-corasick"
 version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -232,6 +187,33 @@ name = "colorchoice"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
+
+[[package]]
+name = "diacritter"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "diacritter-core",
+ "evdev",
+ "gtk4",
+ "gtk4-layer-shell",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "diacritter-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+ "serde",
+ "serde_json",
+ "toml",
+ "unicode-normalization",
+]
 
 [[package]]
 name = "dirs"

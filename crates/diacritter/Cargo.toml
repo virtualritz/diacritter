@@ -1,0 +1,25 @@
+[package]
+name = "diacritter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+readme.workspace = true
+description = "Press-and-hold diacritic popup for Linux, like macOS."
+keywords = ["diacritics", "keyboard", "evdev", "uinput", "linux"]
+categories = ["command-line-utilities", "os::linux-apis", "hardware-support"]
+
+[features]
+macos-order = []
+
+[dependencies]
+diacritter-core = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow = { workspace = true }
+clap = { version = "4", features = ["derive"] }
+evdev = { version = "0.13", features = ["tokio"] }
+gtk4 = "0.11"
+gtk4-layer-shell = "0.8"

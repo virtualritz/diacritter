@@ -1,11 +1,11 @@
 [Unit]
-Description=Accent character popup (accentd UI)
+Description=Accent character popup (diacritter UI)
 After=graphical-session.target
 PartOf=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/accentd-popup
+ExecStart=/usr/bin/diacritter-popup
 Restart=on-failure
 RestartSec=3
 
