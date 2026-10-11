@@ -47,6 +47,87 @@ fn accents(list: &[&str]) -> Vec<String> {
     list.iter().map(|symbol| symbol.to_string()).collect()
 }
 
+/// The diacritics every language locale shares.
+///
+/// Each language locale shows the same union of variants for a base letter. The
+/// locale only changes the order: its own accents come first, and the rest fill
+/// the remaining slots.
+const COMMON_DIACRITICS: [char; 16] = [
+    '\u{0300}', // grave
+    '\u{0301}', // acute
+    '\u{0302}', // circumflex
+    '\u{0303}', // tilde
+    '\u{0308}', // diaeresis
+    '\u{030a}', // ring above
+    '\u{0304}', // macron
+    '\u{030c}', // caron
+    '\u{0327}', // cedilla
+    '\u{0328}', // ogonek
+    '\u{0306}', // breve
+    '\u{0307}', // dot above
+    '\u{030b}', // double acute
+    '\u{0323}', // dot below
+    '\u{0309}', // hook above
+    '\u{0326}', // comma below
+];
+
+/// The maximum number of variants a locale shows for one letter. The first
+/// nine use the number row, and the tenth uses `0`.
+const MAX_LOCALE_SLOTS: usize = 10;
+
+/// Build the shared per-letter union from `COMMON_DIACRITICS`.
+fn common_locale() -> HashMap<String, Vec<String>> {
+    ('a'..='z')
+        .filter_map(|base| {
+            let variants: Vec<String> = COMMON_DIACRITICS
+                .iter()
+                .filter_map(|&mark| compose(base, mark))
+                .collect();
+            (!variants.is_empty()).then(|| (base.to_string(), variants))
+        })
+        .collect()
+}
+
+/// Reorder the shared union so the `preferred` accents come first.
+///
+/// Every letter keeps up to `MAX_LOCALE_SLOTS` variants. The rest of the union
+/// fills the remaining slots in canonical order.
+fn apply_priority(preferred: HashMap<String, Vec<String>>) -> HashMap<String, Vec<String>> {
+    common_locale()
+        .into_iter()
+        .map(|(base, union)| {
+            let mut ordered = preferred.get(&base).cloned().unwrap_or_default();
+            let extra: Vec<String> = union
+                .into_iter()
+                .filter(|variant| !ordered.contains(variant))
+                .collect();
+            ordered.extend(extra);
+            ordered.truncate(MAX_LOCALE_SLOTS);
+            (base, ordered)
+        })
+        .collect()
+}
+
+fn locale_it() -> HashMap<String, Vec<String>> {
+    apply_priority(it_preferences())
+}
+
+fn locale_es() -> HashMap<String, Vec<String>> {
+    apply_priority(es_preferences())
+}
+
+fn locale_fr() -> HashMap<String, Vec<String>> {
+    apply_priority(fr_preferences())
+}
+
+fn locale_de() -> HashMap<String, Vec<String>> {
+    apply_priority(de_preferences())
+}
+
+fn locale_pt() -> HashMap<String, Vec<String>> {
+    apply_priority(pt_preferences())
+}
+
 /// The ten diacritics used by the `unicode` locale, in fixed slot order.
 ///
 /// Slot labels run `1` through `9`, then `0` for the tenth.
@@ -99,7 +180,7 @@ fn compose(base: char, mark: char) -> Option<String> {
     }
 }
 
-fn locale_it() -> HashMap<String, Vec<String>> {
+fn it_preferences() -> HashMap<String, Vec<String>> {
     HashMap::from([
         (
             "a".into(),
@@ -141,7 +222,7 @@ fn locale_it() -> HashMap<String, Vec<String>> {
     ])
 }
 
-fn locale_es() -> HashMap<String, Vec<String>> {
+fn es_preferences() -> HashMap<String, Vec<String>> {
     HashMap::from([
         (
             "a".into(),
@@ -186,7 +267,7 @@ fn locale_es() -> HashMap<String, Vec<String>> {
     ])
 }
 
-fn locale_fr() -> HashMap<String, Vec<String>> {
+fn fr_preferences() -> HashMap<String, Vec<String>> {
     HashMap::from([
         (
             "a".into(),
@@ -228,7 +309,7 @@ fn locale_fr() -> HashMap<String, Vec<String>> {
     ])
 }
 
-fn locale_de() -> HashMap<String, Vec<String>> {
+fn de_preferences() -> HashMap<String, Vec<String>> {
     HashMap::from([
         (
             "a".into(),
@@ -269,7 +350,7 @@ fn locale_de() -> HashMap<String, Vec<String>> {
     ])
 }
 
-fn locale_pt() -> HashMap<String, Vec<String>> {
+fn pt_preferences() -> HashMap<String, Vec<String>> {
     HashMap::from([
         (
             "a".into(),
@@ -485,40 +566,50 @@ mod tests {
 
     #[test]
     fn italian_e_has_grave_first() {
-        // spec: e = ["è", "é", "ê", "ë"]
         let it = builtin_locale("it");
         let e_accents = &it["e"];
         assert_eq!(e_accents[0], "è");
         assert_eq!(e_accents[1], "é");
-        assert_eq!(e_accents.len(), 4);
+        assert_eq!(e_accents.len(), MAX_LOCALE_SLOTS);
     }
 
     #[test]
-    fn italian_a_has_5_variants() {
-        // spec: a = ["à", "á", "â", "ã", "ä"]
+    fn italian_a_keeps_its_order_and_fills_slots() {
         let it = builtin_locale("it");
-        assert_eq!(it["a"].len(), 5);
-        assert_eq!(it["a"][0], "à");
+        assert_eq!(it["a"].len(), MAX_LOCALE_SLOTS);
+        assert_eq!(&it["a"][..5], &["à", "á", "â", "ã", "ä"]);
     }
 
     #[test]
-    fn italian_n_has_only_tilde() {
+    fn italian_n_starts_with_tilde() {
         let it = builtin_locale("it");
-        assert_eq!(it["n"], vec!["ñ"]);
+        assert_eq!(it["n"][0], "ñ");
     }
 
     #[test]
-    fn italian_c_has_only_cedilla() {
+    fn italian_c_starts_with_cedilla() {
         let it = builtin_locale("it");
-        assert_eq!(it["c"], vec!["ç"]);
+        assert_eq!(it["c"][0], "ç");
     }
 
     // --- spec: German has s → ß ---
 
     #[test]
-    fn german_s_has_eszett() {
+    fn german_s_has_eszett_first() {
         let de = builtin_locale("de");
-        assert_eq!(de["s"], vec!["ß"]);
+        assert_eq!(de["s"][0], "ß");
+    }
+
+    #[test]
+    fn german_vowels_fill_all_slots_with_umlaut_first() {
+        let de = builtin_locale("de");
+        for vowel in ["a", "e", "i", "o", "u"] {
+            assert_eq!(de[vowel].len(), MAX_LOCALE_SLOTS, "vowel {vowel}");
+        }
+        assert_eq!(de["a"][0], "ä");
+        assert_eq!(de["a"][1], "à");
+        assert_eq!(de["o"][0], "ö");
+        assert_eq!(de["u"][0], "ü");
     }
 
     #[test]
@@ -634,8 +725,9 @@ mod tests {
     #[test]
     fn resolve_accents_returns_none_for_unknown_base() {
         let it = builtin_locale("it");
-        assert!(resolve_accents(&it, "z", false).is_none());
-        assert!(resolve_accents(&it, "b", false).is_none());
+        // `q` has no precomposed form with any common diacritic.
+        assert!(resolve_accents(&it, "q", false).is_none());
+        assert!(resolve_accents(&it, "1", false).is_none());
     }
 
     // --- spec: Spanish has ñ and ý ---
@@ -643,7 +735,7 @@ mod tests {
     #[test]
     fn spanish_has_n_tilde_and_y_accents() {
         let es = builtin_locale("es");
-        assert_eq!(es["n"], vec!["ñ"]);
+        assert_eq!(es["n"][0], "ñ");
         assert!(es.contains_key("y"));
         assert_eq!(es["y"][0], "ý");
     }
@@ -655,7 +747,7 @@ mod tests {
         let fr = builtin_locale("fr");
         assert!(fr["a"].contains(&"æ".to_string()));
         assert!(fr["o"].contains(&"œ".to_string()));
-        assert_eq!(fr["c"], vec!["ç"]);
+        assert_eq!(fr["c"][0], "ç");
     }
 
     // --- spec: Portuguese prioritizes tilde for a, o ---

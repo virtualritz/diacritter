@@ -412,7 +412,8 @@ mod tests {
     const KEY_A: u16 = 30;
     const KEY_C: u16 = 46;
     const KEY_E: u16 = 18;
-    const KEY_F: u16 = 33; // not accent-eligible
+    const KEY_F: u16 = 33;
+    const KEY_Q: u16 = 16; // has no common diacritic
     const KEY_1: u16 = 2;
     const KEY_2: u16 = 3;
     const KEY_9: u16 = 10;
@@ -494,7 +495,7 @@ mod tests {
     #[test]
     fn press_non_accent_key_relays_and_stays_idle() {
         let mut sm = make_sm();
-        let actions = sm.process_event(key_press(KEY_F));
+        let actions = sm.process_event(key_press(KEY_Q));
         assert!(has_relay(&actions));
         assert!(sm.is_idle());
     }
@@ -634,11 +635,11 @@ mod tests {
     #[test]
     fn popup_out_of_range_digit_dismisses() {
         let mut sm = make_sm();
-        sm.process_event(key_press(KEY_E));
+        sm.process_event(key_press(KEY_C));
         std::thread::sleep(std::time::Duration::from_millis(350));
         sm.check_timer();
 
-        // Italian 'e' has 4 accents, press 9
+        // Italian 'c' has 5 variants, press 9
         let actions = sm.process_event(key_press(KEY_9));
         assert!(
             has_emit_accent(&actions).is_none(),
@@ -821,7 +822,7 @@ mod tests {
     // === SPEC: ShowPopup labels are 1-indexed ===
 
     #[test]
-    fn show_popup_labels_are_1_indexed() {
+    fn show_popup_labels_use_the_number_row_then_zero() {
         let mut sm = make_sm();
         sm.process_event(key_press(KEY_E));
         std::thread::sleep(std::time::Duration::from_millis(350));
@@ -834,13 +835,14 @@ mod tests {
             })
             .expect("should have ShowPopup");
         assert_eq!(labels[0], 1);
-        assert_eq!(*labels.last().unwrap(), labels.len() as u8);
+        assert_eq!(*labels.last().unwrap(), 0);
+        assert_eq!(labels.len(), 10);
     }
 
-    // === SPEC: 'a' key with Italian locale has 5 accents ===
+    // === SPEC: 'a' key with Italian locale fills all slots ===
 
     #[test]
-    fn italian_a_popup_has_5_accents() {
+    fn italian_a_popup_fills_slots() {
         let mut sm = make_sm();
         sm.process_event(key_press(KEY_A));
         std::thread::sleep(std::time::Duration::from_millis(350));
@@ -852,7 +854,7 @@ mod tests {
                 _ => None,
             })
             .expect("should have ShowPopup");
-        assert_eq!(accents.len(), 5);
+        assert_eq!(accents.len(), 10);
         assert_eq!(accents[0], "à");
     }
 
